@@ -30,9 +30,9 @@ function appendTemplate(data, url) {
       }
     })
     combinedJSON.templates = templates
-    console.log('appended: ' + url)
+    console.log(`appended: ${url}`)
   } catch (e) {
-    console.log('error appending: ' + url)
+    console.log(`error appending: ${url}`)
   }
 }
 
@@ -50,12 +50,12 @@ async function getData(url) {
       appendTemplate(data.templates, url)
     }
   } catch (e) {
-    console.log('Error Appending: ' + url)
+    console.log(`Error Appending: ${url}`)
   }
 }
 
 async function getTemplates() {
-  console.log('Number of Urls: ' + templateUrls.length)
+  console.log(`Number of Urls: ${templateUrls.length}`)
   for (let i = 0; i < templateUrls.length; i++) {
     await getData(templateUrls[i])
   }

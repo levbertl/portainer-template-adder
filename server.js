@@ -1,27 +1,28 @@
 'use strict'
 const express = require('express')
-const fetch = require('node-fetch');
+const fetch = require('node-fetch')
 
 const app = express()
-const portainerDefaultTemplates =  'https://raw.githubusercontent.com/portainer/templates/master/templates-2.0.json'
+const portainerDefaultTemplates =
+  'https://raw.githubusercontent.com/portainer/templates/master/templates-2.0.json'
 const templateUrls = [portainerDefaultTemplates]
 const combinedJSON = {
   version: '2',
   templates: [],
 }
 
-function removePortainerDefaultTemplate(){
+function removePortainerDefaultTemplate() {
   let index = templateUrls.indexOf(portainerDefaultTemplates)
-  if (index === 0){
+  if (index === 0) {
     templateUrls.shift()
-  }else if (index > 0){
+  } else if (index > 0) {
     templateUrls.slice(index, 1)
-  }  
+  }
   console.log('removed default')
 }
 
 function appendTemplate(data, url) {
-  const templates = Object.assign(combinedJSON.templates,{})
+  const templates = Object.assign(combinedJSON.templates, {})
   try {
     data.forEach((te) => {
       if (!templates.filter((t) => t.title === te.title).length) {
@@ -29,10 +30,10 @@ function appendTemplate(data, url) {
       }
     })
     combinedJSON.templates = templates
-    console.log('appended: '+ url)
+    console.log('appended: ' + url)
   } catch (e) {
-    console.log('error appending: '+ url)
-  }  
+    console.log('error appending: ' + url)
+  }
 }
 
 async function getData(url) {
@@ -53,7 +54,7 @@ async function getData(url) {
   }
 }
 
-async function getTemplates(){
+async function getTemplates() {
   console.log('Number of Urls: ' + templateUrls.length)
   for (let i = 0; i < templateUrls.length; i++) {
     await getData(templateUrls[i])
@@ -71,13 +72,13 @@ for (const key in process.env) {
     Object.hasOwnProperty.call(process.env, key) &&
     key.toLowerCase() == 'pte_default'
   ) {
-    if(process.env[key]===false || process.env[key] ==='false'){
+    if (process.env[key] === false || process.env[key] === 'false') {
       removePortainerDefaultTemplate()
     }
   }
 }
 
-app.get('/templates.json', async(req, res) => {
+app.get('/templates.json', async (req, res) => {
   await getTemplates()
   res.send(combinedJSON)
 })
